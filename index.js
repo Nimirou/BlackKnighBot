@@ -4,9 +4,14 @@ const cheerio = require("cheerio");
 const { Client, GatewayIntentBits } = require("discord.js");
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 let sOldValueCount = 0,
+  sOldValueCountBF = 0,
   aNewValues = [],
   aOldValues = [],
+  aNewValuesBF = [],
+  aOldValuesBF = [],
   sNewValueCount,
+  sNewValueCountBF,
+  BFChannel,
   MainChannel;
 
 /**
@@ -16,6 +21,11 @@ client.on("ready", () => {
   client.channels.fetch("1055590070448574516").then((channel) => {
     MainChannel = channel;
     callCycle(MainChannel);
+  });
+
+  client.channels.fetch("1064666540659724388").then((channel) => {
+    BFChannel = channel;
+    callCycleBF(BFChannel);
   });
 });
 
@@ -73,7 +83,7 @@ function afterAllAxiosCompleted() {
     }
   }
   sOldValueCount = sNewValueCount;
-  OldValue = aNewValues;
+  aOldValues = aNewValues;
 
   aNewValues = [];
   sNewValueCount = "";
@@ -156,8 +166,128 @@ function callCycle() {
     } else {
       setTimeout(function () {
         callCycle(MainChannel);
+      }, 300000); //300000
+    }
+  });
+}
+
+function callCycleBF() {
+  let options = {
+    method: "GET",
+    responseType: "arraybuffer",
+    responseEncoding: "binary",
+    url: "",
+  };
+
+  const MainOption = {
+    method: "GET",
+    responseType: "arraybuffer",
+    responseEncoding: "binary",
+    url: "https://b2b.blackfire.cz/pokemon-tcg?p=Products&cid=1843622&instock=1",
+  };
+
+  axios(MainOption).then((response) => {
+    const html = decodeURIComponent(response.data.toString("binary"));
+    const $ = cheerio.load(html);
+    var hodnoty = $(".counter").text();
+    sNewValueCountBF = hodnoty.split(" ")[1];
+    if (sNewValueCountBF !== sOldValueCountBF) {
+      let allAxios = [];
+      for (let i = 0; i < getUrlsBF().length; i++) {
+        options.url = getUrlsBF()[i].url;
+        allAxios.push(callAxiosBF(options, i));
+      }
+      Promise.all(allAxios).then((values) => {
+        for (i = 0; i < values.length; i++) {
+          values[i].forEach((element) => {
+            if (element !== "") {
+              aNewValuesBF.push(element.split("\n")[0]);
+            }
+          });
+        }
+        console.log(aNewValuesBF.length + "leng");
+        afterAllAxiosCompletedBF();
+      });
+    } else {
+      setTimeout(function () {
+        callCycleBF(BFChannel);
       }, 300000);
     }
+  });
+}
+
+function afterAllAxiosCompletedBF() {
+  var Message = `**Na Blackfire se změnil počet produktů. Starý počet - ${sOldValueCountBF} , Nový počet - ${sNewValueCountBF}** \n -------------------------------------------------- \n`;
+  let differenceOld = aNewValuesBF.filter((x) => !aOldValuesBF.includes(x));
+  if (differenceOld.length > 0) {
+    if (differenceOld.length < 15) {
+      Message +=
+        "Věci byli přidány -\n" +
+        createStringFromArray(differenceOld) +
+        " -------------------------------------------------- \n";
+    }
+  }
+  let differenceNew = aOldValuesBF.filter((x) => !aNewValuesBF.includes(x));
+  if (differenceNew.length > 0) {
+    if (differenceNew.length < 15) {
+      Message +=
+        "Věci byli odebrány -\n" +
+        createStringFromArray(differenceNew) +
+        " -------------------------------------------------- \n";
+    }
+  }
+  sOldValueCountBF = sNewValueCountBF;
+  aOldValuesBF = aNewValuesBF;
+
+  aNewValuesBF = [];
+  sNewValueCountBF = "";
+  BFChannel.send(`<@351055918735032321> ${Message}`);
+  setTimeout(function () {
+    callCycleBF(BFChannel);
+  }, 300000); //300000
+}
+
+function getUrlsBF() {
+  return [
+    {
+      url: "https://b2b.blackfire.cz/pokemon-tcg?p=Products&cid=1843622&instock=1&page=1",
+      sekce: "PokemonBF1",
+    },
+    {
+      url: "https://b2b.blackfire.cz/pokemon-tcg?p=Products&cid=1843622&instock=1&page=2",
+      sekce: "PokemonBF2",
+    },
+    {
+      url: "https://b2b.blackfire.cz/pokemon-tcg?p=Products&cid=1843622&instock=1&page=3",
+      sekce: "PokemonBF3",
+    },
+  ];
+}
+
+function callAxiosBF(options) {
+  return axios(options).then((response) => {
+    let sValues = [];
+    const html = decodeURIComponent(response.data.toString("binary"));
+    const $ = cheerio.load(html);
+    var sValue = $(".item-name", html).each(function () {
+      if (
+        $(this)
+          .find("h4")
+          .text()
+          .replace(/(\r\n|\n|\r)/gm, "")
+          .trim() !== ""
+      ) {
+        sValues.push(
+          $(this)
+            .find("h4")
+            .text()
+            .replace(/(\r\n|\n|\r)/gm, "")
+            .trim()
+        );
+      }
+    });
+
+    return sValues;
   });
 }
 
