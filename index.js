@@ -227,6 +227,7 @@ function afterAllAxiosCompletedBF() {
         " -------------------------------------------------- \n";
     }
   }
+
   let differenceNew = aOldValuesBF.filter((x) => !aNewValuesBF.includes(x));
   if (differenceNew.length > 0) {
     if (differenceNew.length < 15) {
@@ -247,6 +248,7 @@ function afterAllAxiosCompletedBF() {
   }, 300000); //300000
 }
 
+//Url for BF
 function getUrlsBF() {
   return [
     {
