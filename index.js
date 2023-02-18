@@ -23,10 +23,10 @@ client.on("ready", () => {
     callCycle(MainChannel);
   });
 
-  /*client.channels.fetch("1064666540659724388").then((channel) => {
+  client.channels.fetch("1064666540659724388").then((channel) => {
     BFChannel = channel;
     callCycleBF(BFChannel);
-  });*/
+  });
 });
 
 /**
@@ -183,7 +183,7 @@ function callCycleBF() {
     method: "GET",
     responseType: "arraybuffer",
     responseEncoding: "binary",
-    url: "https://b2b.blackfire.cz/pokemon-tcg?p=Products&cid=1843622&instock=1",
+    url: "https://b2b.blackfire.cz/pokemon-tcg?p=Products&cid=1972260&instock=1",
   };
 
   axios(MainOption).then((response) => {
@@ -252,16 +252,12 @@ function afterAllAxiosCompletedBF() {
 function getUrlsBF() {
   return [
     {
-      url: "https://b2b.blackfire.cz/pokemon-tcg?p=Products&cid=1843622&instock=1&page=1",
+      url: "https://b2b.blackfire.cz/pokemon-tcg?p=Products&cid=1972260&instock=1",
       sekce: "PokemonBF1",
     },
     {
-      url: "https://b2b.blackfire.cz/pokemon-tcg?p=Products&cid=1843622&instock=1&page=2",
+      url: "https://b2b.blackfire.cz/pokemon-tcg?p=Products&cid=1972260&instock=1&page=2",
       sekce: "PokemonBF2",
-    },
-    {
-      url: "https://b2b.blackfire.cz/pokemon-tcg?p=Products&cid=1843622&instock=1&page=3",
-      sekce: "PokemonBF3",
     },
   ];
 }
