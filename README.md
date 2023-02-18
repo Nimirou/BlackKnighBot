@@ -28,5 +28,5 @@ Simply go into your folder where you want your project to be and start the npm
 ## Future plans and what to improve
 
 - [x] add BlackFire support
-- [] fix problem dumping when request fail
-- [] fix problem with BF changing id in url adress
+- [ ] fix problem dumping when request fail
+- [ ] fix problem with BF changing id in url adress
