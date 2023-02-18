@@ -23,10 +23,10 @@ client.on("ready", () => {
     callCycle(MainChannel);
   });
 
-  client.channels.fetch("1064666540659724388").then((channel) => {
+  /*client.channels.fetch("1064666540659724388").then((channel) => {
     BFChannel = channel;
     callCycleBF(BFChannel);
-  });
+  });*/
 });
 
 /**
