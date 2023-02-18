@@ -25,7 +25,11 @@ client.on("ready", () => {
 
   client.channels.fetch("1064666540659724388").then((channel) => {
     BFChannel = channel;
-    callCycleBF(BFChannel);
+    try {
+    } catch (err) {
+      console.log("BF neprošel");
+      callCycleBF(BFChannel);
+    }
   });
 });
 
