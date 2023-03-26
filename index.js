@@ -137,6 +137,10 @@ function callCycle() {
     responseType: "arraybuffer",
     responseEncoding: "binary",
     url: "",
+    httpsAgent: new https.Agent({
+      ciphers: "AES256-SHA",
+      minVersion: "TLSv1.2",
+    }),
   };
 
   const MainOption = {
@@ -144,6 +148,10 @@ function callCycle() {
     responseType: "arraybuffer",
     responseEncoding: "binary",
     url: "https://cernyrytir.cz/index.php3?akce=100&sekce=pok",
+    httpsAgent: new https.Agent({
+      ciphers: "AES256-SHA",
+      minVersion: "TLSv1.2",
+    }),
   };
 
   axios(MainOption).then((response) => {
@@ -181,12 +189,20 @@ function callCycleBF() {
     responseType: "arraybuffer",
     responseEncoding: "binary",
     url: "",
+    httpsAgent: new https.Agent({
+      ciphers: "AES256-SHA",
+      minVersion: "TLSv1.2",
+    }),
   };
 
   const MainOption = {
     method: "GET",
     responseType: "arraybuffer",
     responseEncoding: "binary",
+    httpsAgent: new https.Agent({
+      ciphers: "AES256-SHA",
+      minVersion: "TLSv1.2",
+    }),
     url: "https://b2b.blackfire.cz/pokemon-tcg?p=Products&cid=1972260&instock=1",
   };
 
