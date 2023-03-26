@@ -2,6 +2,7 @@ const axios = require("axios");
 const dotenv = require("dotenv").config();
 const cheerio = require("cheerio");
 const { Client, GatewayIntentBits } = require("discord.js");
+const https = require("https");
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 let sOldValueCount = 0,
   sOldValueCountBF = 0,
